@@ -70,6 +70,15 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+//        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+//                finish();
+//            }
+//        });
+
         init();
 
         restoreValuesFromBundle(savedInstanceState);

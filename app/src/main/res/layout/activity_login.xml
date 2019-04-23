@@ -78,13 +78,13 @@
 
 
             <EditText
-                android:id="@+id/username1"
+                android:id="@+id/edit_email"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:hint="Id : "
-                android:text="kishan@gmail.com"
+                android:text="kishan123@gmail.com"
                 android:background="@null"
                 android:textSize="15dp" />
 
@@ -117,17 +117,22 @@
 
 
             <EditText
-                android:id="@+id/pwd_TV"
+                android:id="@+id/edit_password"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:hint="Company Name"
-                android:text="1234567890"
+                android:text="123456"
                 android:background="@null"
                 android:textSize="15dp" />
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="100dp"
+            android:background="@color/view_color" />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -161,7 +166,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:hint="Company Name"
-                android:text="Jpr Technosoft"
+                android:text="JPR"
                 android:background="@null"
                 android:textSize="15dp" />
         </LinearLayout>
