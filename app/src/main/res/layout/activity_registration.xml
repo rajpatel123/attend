@@ -85,7 +85,7 @@
                         android:layout_marginRight="20dp"
                         android:background="@null"
                         android:textSize="16dp"
-                        android:hint="Name :" />
+                        android:hint="Email" />
 
                     <View
                         android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                         android:layout_marginRight="20dp"
                         android:background="@null"
                         android:textSize="16dp"
-                        android:hint= "Email :" />
+                        android:hint= "firstname" />
 
 
                     <View
@@ -123,7 +123,7 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:textSize="16dp"
-                        android:hint="Mobile :" />
+                        android:hint="lastname" />
 
                     <View
                         android:layout_width="match_parent"
@@ -132,16 +132,6 @@
                         android:layout_marginRight="20dp"
                         android:background="@color/view_color" />
 
-                    <EditText
-                        android:id="@+id/address_ET"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@null"
-                        android:textSize="16dp"
-                        android:hint="Address :" />
 
 
                     <View
@@ -157,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:lines="5"
-                        android:hint="Comments :"
+                        android:hint="Message "
                         android:layout_marginTop="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginLeft="20dp"

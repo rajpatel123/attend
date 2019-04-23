@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -21,6 +22,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.kishan.recyclerrrr.Models.registration.RegisterResponse;
+import com.example.kishan.recyclerrrr.retrofit.RestClient;
+import com.example.kishan.recyclerrrr.utils.Utils;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -41,15 +45,22 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegistrationActivity extends AppCompatActivity {
-    private EditText name ,email,mobile,address;
-    private Button registration,showLocation;
-
+    private EditText fname, lname, email, message;
+    private Button registration ;
+    String latitude, longitude;
 
 
     private String mLastUpdateTime;
@@ -70,49 +81,52 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-//        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-//                finish();
-//            }
-//        });
-
         init();
+        startLocationUpdates();
 
-        restoreValuesFromBundle(savedInstanceState);
-
-        address=findViewById(R.id.address_ET);
-
-        registration=findViewById(R.id.reg_BTN);
-        showLocation = findViewById(R.id.Location);
-        showLocation.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startLocationButtonClick();
+                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                finish();
             }
         });
 
-        Intent intent=getIntent();
-        String message=intent.getStringExtra("EXTRA_MESSAGE");
-        EditText editText=findViewById(R.id.name_ET);
+
+        restoreValuesFromBundle(savedInstanceState);
+
+        fname = findViewById(R.id.email_ET);
+        lname = findViewById(R.id.mobile_ET);
+        email = findViewById(R.id.name_ET);
+        message = findViewById(R.id.et_body_email);
+
+
+        registration = findViewById(R.id.reg_BTN);
+
+        registration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validate();
+
+            }
+        });
+
+
+
+        Intent intent = getIntent();
+        String message = intent.getStringExtra("EXTRA_MESSAGE");
+        EditText editText = findViewById(R.id.name_ET);
         editText.setText(message);
 
 
-        String message1=intent.getStringExtra("EXTRA_MESSAGE1");
-        EditText editText1=findViewById(R.id.email_ET);
+        String message1 = intent.getStringExtra("EXTRA_MESSAGE1");
+        EditText editText1 = findViewById(R.id.email_ET);
         editText1.setText(message1);
 
 
-        String message2=intent.getStringExtra("EXTRA_MESSAGE2");
-        EditText editText2=findViewById(R.id.mobile_ET);
+        String message2 = intent.getStringExtra("EXTRA_MESSAGE2");
+        EditText editText2 = findViewById(R.id.mobile_ET);
         editText2.setText(message2);
-
-
-
-
-
 
 
     }
@@ -140,6 +154,7 @@ public class RegistrationActivity extends AppCompatActivity {
         mLocationSettingsRequest = builder.build();
 
     }
+
     private void restoreValuesFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("is_requesting_updates")) {
@@ -157,6 +172,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -176,12 +192,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         Log.i(TAG, "All location settings are satisfied.");
 
-                        if (mCurrentLocation != null) {
-                            Toast.makeText(getApplicationContext(), "Lat: " + mCurrentLocation.getLatitude()
-                                    + ", Lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Last known location is not available!", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(getApplicationContext(), "Started Location Update", Toast.LENGTH_SHORT).show();
 
                         //noinspection MissingPermission
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
@@ -240,32 +251,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    public void startLocationButtonClick() {
-        // Requesting ACCESS_FINE_LOCATION using Dexter library
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        mRequestingLocationUpdates = true;
-                        startLocationUpdates();
-                    }
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        if (response.isPermanentlyDenied()) {
-                            // open device settings when the permission is
-                            // denied permanently
-                            openSettings();
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
-    }
 
     private void openSettings() {
         Intent intent = new Intent();
@@ -305,63 +291,88 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
+    public boolean validate() {
+        boolean check = true;
+
+        String fnamee = fname.getText().toString();
+        String lnamee = lname.getText().toString();
+        String emaill = email.getText().toString();
+        String messagee = message.getText().toString();
+
+        if(mCurrentLocation!= null) {
+            latitude = String.valueOf(mCurrentLocation.getLatitude());
+            longitude = String.valueOf(mCurrentLocation.getLongitude());
+        }
+        if (fnamee.isEmpty() ) {
+            fname.setError("at least 3 characters");
+            check = false;
+        } else {
+            fname.setError(null);
+        }
+
+        if (lnamee.isEmpty()) {
+            lname.setError("Enter Valid lname");
+          check= false;
+        } else {
+            lname.setError(null);
+        }
+
+
+        if (emaill.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emaill).matches()) {
+            email.setError("enter a valid email address");
+            check = false;
+        } else {
+            email.setError(null);
+        }
+
+        if (messagee.isEmpty()) {
+            message.setError("Enter Valid Message");
+            check = false;
+        } else {
+            message.setError(null);
+        }
+
+
+        RequestBody fname1 = RequestBody.create(MediaType.parse("text/plain"), fnamee);
+        RequestBody lname1 = RequestBody.create(MediaType.parse("text/plain"), lnamee);
+        RequestBody email1 = RequestBody.create(MediaType.parse("text/plain"), emaill);
+        RequestBody message1 = RequestBody.create(MediaType.parse("text/plain"), messagee);
+        RequestBody latitudee = RequestBody.create(MediaType.parse("text/plain"), latitude);
+        RequestBody longitudee = RequestBody.create(MediaType.parse("text/plain"), longitude);
+        Utils.showProgressDialog(this);
+
+        RestClient.registerUser(fname1, lname1, email1, message1, latitudee, longitudee, new Callback<RegisterResponse>() {
+
+
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+
+                Utils.dismissProgressDialog();
+                if (response.body() != null) {
+                    if (response.body().getStatus()) {
+                        Utils.displayToast(getApplicationContext(), "Successfuly registered");
+                        startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                    } else {
+                        Toast.makeText(RegistrationActivity.this, "Failed Register", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Utils.dismissProgressDialog();
+                Utils.displayToast(RegistrationActivity.this, "Unable to register, please try again later");
+
+            }
+        });
+        return check;
+    }
 
 }
 
 
 
-/*
-
-        registration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                boolean check=true;
-
-                String namee=name.getText().toString();
-                String gmailll=email.getText().toString();
-                String mobilee=mobile.getText().toString();
-                String addresss=address.getText().toString();
 
 
 
-                if(namee.length()<5)
-                {
-                    name.setError("enter more than 10 charater");
-                    check=false;
-                }
 
-                if(!Patterns.EMAIL_ADDRESS.matcher(gmailll).matches())
-                {
-                    email.setError("Field is empty");
-                    check=false;
-                }
-
-
-                if(mobilee.length()<10)
-                {
-                    mobile.setError("enter more than 10 charater");
-                    check=false;
-                }
-
-                if(addresss.length()<10)
-                {
-                    address.setError("enter more than 10 charater");
-                    check=false;
-                }
-
-                if (check==true)
-                {
-                    Toast.makeText(RegistrationActivity.this, "Registration Successfully", Toast.LENGTH_SHORT).show();
-
-
-                }
-                else
-                {
-                    Toast.makeText(RegistrationActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
-*/
