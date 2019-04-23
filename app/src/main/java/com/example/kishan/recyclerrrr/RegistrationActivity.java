@@ -8,22 +8,17 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
@@ -47,16 +42,15 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private List<Data> movieList = new ArrayList<Data>();
-    private RecyclerView recyclerView;
-    private MoviesAdapter mAdapter;
+import butterknife.OnClick;
 
-    private Toolbar toolbar;
+public class RegistrationActivity extends AppCompatActivity {
+    private EditText name ,email,mobile,address;
+    private Button registration,showLocation;
+
+
 
     private String mLastUpdateTime;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -75,25 +69,45 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registration);
         init();
 
         restoreValuesFromBundle(savedInstanceState);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        address=findViewById(R.id.address_ET);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        registration=findViewById(R.id.reg_BTN);
+        showLocation = findViewById(R.id.Location);
+        showLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startLocationButtonClick();
+            }
+        });
+
+        Intent intent=getIntent();
+        String message=intent.getStringExtra("EXTRA_MESSAGE");
+        EditText editText=findViewById(R.id.name_ET);
+        editText.setText(message);
 
 
-        mAdapter = new MoviesAdapter(movieList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        prepareMovieData();
+        String message1=intent.getStringExtra("EXTRA_MESSAGE1");
+        EditText editText1=findViewById(R.id.email_ET);
+        editText1.setText(message1);
+
+
+        String message2=intent.getStringExtra("EXTRA_MESSAGE2");
+        EditText editText2=findViewById(R.id.mobile_ET);
+        editText2.setText(message2);
+
+
+
+
+
 
 
     }
+
     private void init() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
@@ -117,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         mLocationSettingsRequest = builder.build();
 
     }
-
     private void restoreValuesFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("is_requesting_updates")) {
@@ -179,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
 
                                     ResolvableApiException rae = (ResolvableApiException) e;
-                                    rae.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                                    rae.startResolutionForResult(RegistrationActivity.this, REQUEST_CHECK_SETTINGS);
                                 } catch (IntentSender.SendIntentException sie) {
                                     Log.i(TAG, "PendingIntent unable to execute request.");
                                 }
@@ -189,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                                         "fixed here. Fix in Settings.";
                                 Log.e(TAG, errorMessage);
 
-                                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegistrationActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                         }
 
 
@@ -284,107 +297,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-    private void prepareMovieData() {
-        Data movie = new Data("Kishan Gupta", "kishan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Ravi Gupta", "mohan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Sumit Gupta", "kishan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Mohan Gupta", "manish832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data(" Martian", "rishabh832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Kishan Gupta", "mohan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Ravi Gupta", "mohan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Mohan kumar", "kishan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Shubham Dviwedi", "sumit832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Rishabh Gupta", "shubham832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Manish Gupta", "sumit832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Bhav Gupta", "manish832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Kishan Gupta", "mohan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Vickrant Gupta", "ravi832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Rajat Gupta", "rahul832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        movie = new Data("Kishan Gupta", "mohan832@gmail.com", "8127828384");
-        movieList.add(movie);
-
-        mAdapter.notifyDataSetChanged();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        String msg = "";
-        switch (item.getItemId()) {
-            case R.id.add_contact:
-                // msg="Add data";
-                Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.mark_attendence:
-                startLocationButtonClick();
-                break;
-        }
-        Toast.makeText(this, "checked", Toast.LENGTH_SHORT).show();
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    public void sendMessage(View view) {
-
-        EditText editText = findViewById(R.id.title);
-        EditText editText1 = findViewById(R.id.genre);
-        EditText editText2 = findViewById(R.id.year);
-
-        String message = editText.getText().toString();
-        String message1 = editText1.getText().toString();
-        String message2 = editText2.getText().toString();
-
-
-        Intent intent = new Intent(this, RegistrationActivity.class);
-        intent.putExtra("EXTRA_MESSAGE", message);
-        intent.putExtra("EXTRA_MESSAGE1", message1);
-        intent.putExtra("EXTRA_MESSAGE2", message2);
-
-
-        startActivity(intent);
-
-    }
-
-
 }
+
+
+
+/*
+
+        registration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                boolean check=true;
+
+                String namee=name.getText().toString();
+                String gmailll=email.getText().toString();
+                String mobilee=mobile.getText().toString();
+                String addresss=address.getText().toString();
+
+
+
+                if(namee.length()<5)
+                {
+                    name.setError("enter more than 10 charater");
+                    check=false;
+                }
+
+                if(!Patterns.EMAIL_ADDRESS.matcher(gmailll).matches())
+                {
+                    email.setError("Field is empty");
+                    check=false;
+                }
+
+
+                if(mobilee.length()<10)
+                {
+                    mobile.setError("enter more than 10 charater");
+                    check=false;
+                }
+
+                if(addresss.length()<10)
+                {
+                    address.setError("enter more than 10 charater");
+                    check=false;
+                }
+
+                if (check==true)
+                {
+                    Toast.makeText(RegistrationActivity.this, "Registration Successfully", Toast.LENGTH_SHORT).show();
+
+
+                }
+                else
+                {
+                    Toast.makeText(RegistrationActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+*/
