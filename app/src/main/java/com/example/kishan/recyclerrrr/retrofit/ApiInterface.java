@@ -25,11 +25,11 @@ public interface ApiInterface {
 //    @Multipart
 //    @POST("jpr_admin/user_api/test_api.php?action=register")
 //   //@Headers({"Content-Type: application/json", "Accept: application/json"})
-//    Call<RegistrationResponse> register(@Part("u_name") RequestBody name,
-//                                        @Part("u_email") RequestBody email,
-//                                        @Part("u_mobile") RequestBody mobile,
-//                                        @Part("u_country") RequestBody country,
-//                                        @Part("u_password") RequestBody password);
+//    Call<RegistrationResponse> register(@Part("email") RequestBody email,
+//                                        @Part("firstName") RequestBody firstName,
+//                                        @Part("lastName") RequestBody lastName,
+//                                        @Part("latitude") RequestBody latitude,
+//                                        @Part("longitude") RequestBody longitude);
 
 
 //    //Catagory
