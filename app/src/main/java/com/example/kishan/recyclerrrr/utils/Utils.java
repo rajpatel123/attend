@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -29,12 +30,12 @@ public class Utils {
 
     private static ProgressDialog pDialog;
 
-    public static void showProgressDialog(Context context) {
+    public static void showProgressDialog(View.OnClickListener context) {
         if (pDialog != null) {
             pDialog.dismiss();
         }
         try {
-            pDialog = new ProgressDialog(context);
+            pDialog = new ProgressDialog((Context) context);
             pDialog.setMessage("Please wait");
             pDialog.setIndeterminate(true);
             pDialog.setCancelable(false);

@@ -7,30 +7,28 @@ import com.example.kishan.recyclerrrr.Models.registration.RegisterResponse;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.http.Multipart;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 public interface ApiInterface {
 
-    //login
-    @Multipart
-    @POST("test_api?action=login")
-    //@Headers({"test_api?action=login"})
-    Call<LoginResponse>  login(@Part("email_id") RequestBody email_id,
-                               @Part("password") RequestBody password,
-                               @Part("company_name") RequestBody company_name);
+    @GET("user/authenticate/{companyName}/{userId}/{password}")
+    Call<LoginResponse> login(@Path("companyName") String companyName,
+                              @Path("userId") String userId,
+                              @Path("password") String password);
 
     //Registration
-  @Multipart
-    @POST("test_api?action=reg")
-   //@Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<RegisterResponse> register(@Part("email") RequestBody email,
-                                    @Part("firstName") RequestBody firstName,
-                                    @Part("lastName") RequestBody lastName,
-                                    @Part("latitude") RequestBody latitude,
-                                    @Part("longitude") RequestBody longitude,
-                                    @Part("message") RequestBody message);
+
+    @POST("agent/saveDealer")
+
+    Call<RegisterResponse> register(@Path("agentId")int agentId,
+                                    @Path("email") String email,
+                                    @Path("firstName") String firstName,
+                                    @Path("lastName") String lastName,
+                                    @Path("latitude")Number latitude,
+                                    @Path("longitude") Number longitude,
+                                    @Path("message") String message);
 
 
 

@@ -11,13 +11,13 @@ public class RestClient {
     private static final String TAG = "RestClient";
 
     //Login
-    public static void loginUser(RequestBody u_email, RequestBody password, RequestBody company_name, Callback<LoginResponse> callback) {
-        RetrofitClient.getClient().login(u_email, password, company_name).enqueue(callback);
+    public static void loginUser(String companyName, String userId, String password, Callback<LoginResponse> callback) {
+        RetrofitClient.getClient().login(companyName, userId, password).enqueue(callback);
     }
 
     //Registration
-    public static void registerUser(RequestBody email, RequestBody firstName, RequestBody lastName, RequestBody latitude, RequestBody longitude, RequestBody message, Callback<RegisterResponse> callback) {
-        RetrofitClient.getClient().register(email, firstName, lastName, latitude, longitude, message).enqueue(callback);
+    public static void registerUser(Integer agentId, String email, String firstName, String lastName, Number latitude, Number longitude, String message, Callback<RegisterResponse> callback) {
+        RetrofitClient.getClient().register(agentId, email, firstName, lastName, latitude, longitude, message).enqueue(callback);
     }
 
 

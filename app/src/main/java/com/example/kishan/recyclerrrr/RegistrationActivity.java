@@ -14,9 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,20 +36,12 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+import com.google.gson.Gson;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 
-import butterknife.OnClick;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,7 +49,7 @@ import retrofit2.Response;
 
 public class RegistrationActivity extends AppCompatActivity {
     private EditText fname, lname, email, message;
-    private Button registration ;
+    private Button registration;
     String latitude, longitude;
 
 
@@ -110,7 +100,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         Intent intent = getIntent();
@@ -252,7 +241,6 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
 
-
     private void openSettings() {
         Intent intent = new Intent();
         intent.setAction(
@@ -295,15 +283,15 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean check = true;
 
         String fnamee = fname.getText().toString();
-        String lnamee = lname.getText().toString();
-        String emaill = email.getText().toString();
+        final String lnamee = lname.getText().toString();
+        final String emaill = email.getText().toString();
         String messagee = message.getText().toString();
 
-        if(mCurrentLocation!= null) {
+        if (mCurrentLocation != null) {
             latitude = String.valueOf(mCurrentLocation.getLatitude());
             longitude = String.valueOf(mCurrentLocation.getLongitude());
         }
-        if (fnamee.isEmpty() ) {
+        if (fnamee.isEmpty()) {
             fname.setError("at least 3 characters");
             check = false;
         } else {
@@ -312,7 +300,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if (lnamee.isEmpty()) {
             lname.setError("Enter Valid lname");
-          check= false;
+            check = false;
         } else {
             lname.setError(null);
         }
@@ -333,46 +321,43 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
 
-        RequestBody fname1 = RequestBody.create(MediaType.parse("text/plain"), fnamee);
-        RequestBody lname1 = RequestBody.create(MediaType.parse("text/plain"), lnamee);
-        RequestBody email1 = RequestBody.create(MediaType.parse("text/plain"), emaill);
-        RequestBody message1 = RequestBody.create(MediaType.parse("text/plain"), messagee);
-        RequestBody latitudee = RequestBody.create(MediaType.parse("text/plain"), latitude);
-        RequestBody longitudee = RequestBody.create(MediaType.parse("text/plain"), longitude);
-        Utils.showProgressDialog(this);
+        if (check) {
 
-        RestClient.registerUser(fname1, lname1, email1, message1, latitudee, longitudee, new Callback<RegisterResponse>() {
+            RegisterResponse registerResponse = new RegisterResponse();
 
+            RestClient.registerUser(registerResponse, new Callback<RegisterResponse>() {
+                @Override
+                public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                    if (response.isSuccessful()) {
+                        RegisterResponse responseModel = response.body();
 
-            @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                        Utils.dismissProgressDialog();
+                        if (response.code() == 200) {
+                            Toast.makeText(RegistrationActivity.this, "registration succesfully", Toast.LENGTH_LONG).show();
+                            Intent intent = null;
+                            if (responseModel.equals(emaill)) {
+                                intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                            } else {
+                                intent = new Intent(RegistrationActivity.this, AccountNotActivatedActivity.class);
+                            }
+                            startActivity(intent);
+                            RegistrationActivity.this.finish();
+                            return;
+                        }
 
-                Utils.dismissProgressDialog();
-                if (response.body() != null) {
-                    if (response.body().getStatus()) {
-                        Utils.displayToast(getApplicationContext(), "Successfuly registered");
-                        startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
-                    } else {
-                        Toast.makeText(RegistrationActivity.this, "Failed Register", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                Utils.dismissProgressDialog();
-                Utils.displayToast(RegistrationActivity.this, "Unable to register, please try again later");
-
-            }
-        });
-        return check;
+                @Override
+                public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                    Utils.dismissProgressDialog();
+                    Log.d(LoginActivity.class.getSimpleName(), "registration failed");
+                }
+            });
+        }
     }
 
 }
-
-
-
-
 
 
 

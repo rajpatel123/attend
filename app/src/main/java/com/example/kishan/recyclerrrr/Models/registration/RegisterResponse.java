@@ -6,27 +6,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class RegisterResponse {
 
-@SerializedName("status")
+@SerializedName("result")
 @Expose
-private Boolean status;
-@SerializedName("message")
-@Expose
-private String message;
+private String result;
 
-public Boolean getStatus() {
-return status;
+public String getResult() {
+return result;
 }
 
-public void setStatus(Boolean status) {
-this.status = status;
-}
-
-public String getMessage() {
-return message;
-}
-
-public void setMessage(String message) {
-this.message = message;
+public void setResult(String result) {
+this.result = result;
 }
 
 }

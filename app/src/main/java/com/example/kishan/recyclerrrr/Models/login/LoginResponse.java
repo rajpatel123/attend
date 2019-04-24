@@ -1,47 +1,97 @@
 package com.example.kishan.recyclerrrr.Models.login;
 
 
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
 
-@SerializedName("status")
+@SerializedName("userId")
 @Expose
-private Boolean status;
-@SerializedName("message")
+private String userId;
+@SerializedName("companyId")
 @Expose
-private String message;
-@SerializedName("id")
+private String companyId;
+@SerializedName("companyLoginName")
 @Expose
-private String id;
-@SerializedName("company_name")
+private String companyLoginName;
+@SerializedName("companyName")
 @Expose
 private String companyName;
+@SerializedName("userFirstName")
+@Expose
+private String userFirstName;
+@SerializedName("userLastName")
+@Expose
+private String userLastName;
+@SerializedName("userRole")
+@Expose
+private String userRole;
+@SerializedName("userType")
+@Expose
+private String userType;
+@SerializedName("profilePic")
+@Expose
+private String profilePic;
+@SerializedName("email")
+@Expose
+private String email;
+@SerializedName("phone")
+@Expose
+private String phone;
+@SerializedName("address")
+@Expose
+private String address;
+@SerializedName("isActive")
+@Expose
+private String isActive;
+@SerializedName("deactivationDate")
+@Expose
+private String deactivationDate;
+@SerializedName("loginFlag")
+@Expose
+private String loginFlag;
+@SerializedName("agentId")
+@Expose
+private String agentId;
+@SerializedName("registrationType")
+@Expose
+private String registrationType;
+@SerializedName("password")
+@Expose
+private String password;
+@SerializedName("userName")
+@Expose
+private String userName;
+@SerializedName("companyType")
+@Expose
+private String companyType;
+@SerializedName("punchStatus")
+@Expose
+private String punchStatus;
 
-public Boolean getStatus() {
-return status;
+public String getUserId() {
+return userId;
 }
 
-public void setStatus(Boolean status) {
-this.status = status;
+public void setUserId(String userId) {
+this.userId = userId;
 }
 
-public String getMessage() {
-return message;
+public String getCompanyId() {
+return companyId;
 }
 
-public void setMessage(String message) {
-this.message = message;
+public void setCompanyId(String companyId) {
+this.companyId = companyId;
 }
 
-public String getId() {
-return id;
+public String getCompanyLoginName() {
+return companyLoginName;
 }
 
-public void setId(String id) {
-this.id = id;
+public void setCompanyLoginName(String companyLoginName) {
+this.companyLoginName = companyLoginName;
 }
 
 public String getCompanyName() {
@@ -50,6 +100,142 @@ return companyName;
 
 public void setCompanyName(String companyName) {
 this.companyName = companyName;
+}
+
+public String getUserFirstName() {
+return userFirstName;
+}
+
+public void setUserFirstName(String userFirstName) {
+this.userFirstName = userFirstName;
+}
+
+public String getUserLastName() {
+return userLastName;
+}
+
+public void setUserLastName(String userLastName) {
+this.userLastName = userLastName;
+}
+
+public Object getUserRole() {
+return userRole;
+}
+
+public void setUserRole(String userRole) {
+this.userRole = (String) userRole;
+}
+
+public String getUserType() {
+return userType;
+}
+
+public void setUserType(String userType) {
+this.userType = userType;
+}
+
+public Object getProfilePic() {
+return profilePic;
+}
+
+public void setProfilePic(String profilePic) {
+this.profilePic = profilePic;
+}
+
+public String getEmail() {
+return email;
+}
+
+public void setEmail(String email) {
+this.email = email;
+}
+
+public String getPhone() {
+return phone;
+}
+
+public void setPhone(String phone) {
+this.phone = phone;
+}
+
+public String getAddress() {
+return address;
+}
+
+public void setAddress(String address) {
+this.address = address;
+}
+
+public String getIsActive() {
+return isActive;
+}
+
+public void setIsActive(String isActive) {
+this.isActive = isActive;
+}
+
+public String getDeactivationDate() {
+return deactivationDate;
+}
+
+public void setDeactivationDate(String deactivationDate) {
+this.deactivationDate = deactivationDate;
+}
+
+public String getLoginFlag() {
+return loginFlag;
+}
+
+public void setLoginFlag(String loginFlag) {
+this.loginFlag = loginFlag;
+}
+
+public String getAgentId() {
+return agentId;
+}
+
+public void setAgentId(String agentId) {
+this.agentId = agentId;
+}
+
+public String getRegistrationType() {
+return registrationType;
+}
+
+public void setRegistrationType(String registrationType) {
+this.registrationType = registrationType;
+}
+
+public String getPassword() {
+return password;
+}
+
+public void setPassword(String password) {
+this.password = password;
+}
+
+public String getUserName() {
+return userName;
+}
+
+public void setUserName(String userName) {
+this.userName = userName;
+}
+
+public Object getCompanyType() {
+return companyType;
+}
+
+public void setCompanyType(String companyType) {
+this.companyType = companyType;
+}
+
+public String getPunchStatus() {
+return punchStatus;
+}
+
+public void setPunchStatus(String punchStatus) {
+this.punchStatus = punchStatus;
 }
 
 }
