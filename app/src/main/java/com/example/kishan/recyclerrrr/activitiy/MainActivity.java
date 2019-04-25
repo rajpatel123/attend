@@ -1,4 +1,4 @@
-package com.example.kishan.recyclerrrr;
+package com.example.kishan.recyclerrrr.activitiy;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -8,20 +8,29 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.kishan.recyclerrrr.Models.registration.RegisterResponse;
+import com.example.kishan.recyclerrrr.BuildConfig;
+import com.example.kishan.recyclerrrr.Models.addagentbyid.GetDealerByIdResponse;
+import com.example.kishan.recyclerrrr.adapter.MoviesAdapter;
+import com.example.kishan.recyclerrrr.R;
 import com.example.kishan.recyclerrrr.retrofit.RestClient;
+import com.example.kishan.recyclerrrr.utils.AttandancePrefs;
 import com.example.kishan.recyclerrrr.utils.Utils;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -36,22 +45,28 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.gson.Gson;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegistrationActivity extends AppCompatActivity {
-    private EditText fname, lname, email, message;
-    private Button registration;
-    String latitude, longitude;
+public class MainActivity extends AppCompatActivity {
+    private List<GetDealerByIdResponse> dealerList = new ArrayList<GetDealerByIdResponse>();
+    private RecyclerView recyclerView;
+    private MoviesAdapter mAdapter;
 
+    private Toolbar toolbar;
 
     private String mLastUpdateTime;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -66,59 +81,32 @@ public class RegistrationActivity extends AppCompatActivity {
     private LocationCallback mLocationCallback;
     private Location mCurrentLocation;
     private Boolean mRequestingLocationUpdates;
+    int agentId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.activity_main);
         init();
-        startLocationUpdates();
 
-        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                finish();
-            }
-        });
-
-
+        agentId = AttandancePrefs.getInt(getApplicationContext(), "agentId", 0);
         restoreValuesFromBundle(savedInstanceState);
 
-        fname = findViewById(R.id.email_ET);
-        lname = findViewById(R.id.mobile_ET);
-        email = findViewById(R.id.name_ET);
-        message = findViewById(R.id.et_body_email);
+        toolbar = (Toolbar) findViewById(R.id.toolbar1);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
 
-        registration = findViewById(R.id.reg_BTN);
-
-        registration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validate();
-
-            }
-        });
-
-
-        Intent intent = getIntent();
-        String message = intent.getStringExtra("EXTRA_MESSAGE");
-        EditText editText = findViewById(R.id.name_ET);
-        editText.setText(message);
-
-
-        String message1 = intent.getStringExtra("EXTRA_MESSAGE1");
-        EditText editText1 = findViewById(R.id.email_ET);
-        editText1.setText(message1);
-
-
-        String message2 = intent.getStringExtra("EXTRA_MESSAGE2");
-        EditText editText2 = findViewById(R.id.mobile_ET);
-        editText2.setText(message2);
+        mAdapter = new MoviesAdapter(MainActivity.this,dealerList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
 
     }
+
 
     private void init() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -181,7 +169,12 @@ public class RegistrationActivity extends AppCompatActivity {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         Log.i(TAG, "All location settings are satisfied.");
 
-                        Toast.makeText(getApplicationContext(), "Started Location Update", Toast.LENGTH_SHORT).show();
+                        if (mCurrentLocation != null) {
+                            Toast.makeText(getApplicationContext(), "Lat: " + mCurrentLocation.getLatitude()
+                                    + ", Lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Last known location is not available!", Toast.LENGTH_SHORT).show();
+                        }
 
                         //noinspection MissingPermission
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
@@ -201,7 +194,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                 try {
 
                                     ResolvableApiException rae = (ResolvableApiException) e;
-                                    rae.startResolutionForResult(RegistrationActivity.this, REQUEST_CHECK_SETTINGS);
+                                    rae.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
                                 } catch (IntentSender.SendIntentException sie) {
                                     Log.i(TAG, "PendingIntent unable to execute request.");
                                 }
@@ -211,7 +204,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                         "fixed here. Fix in Settings.";
                                 Log.e(TAG, errorMessage);
 
-                                Toast.makeText(RegistrationActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                         }
 
 
@@ -240,6 +233,32 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
+    public void startLocationButtonClick() {
+        // Requesting ACCESS_FINE_LOCATION using Dexter library
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        mRequestingLocationUpdates = true;
+                        startLocationUpdates();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        if (response.isPermanentlyDenied()) {
+                            // open device settings when the permission is
+                            // denied permanently
+                            openSettings();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
+    }
 
     private void openSettings() {
         Intent intent = new Intent();
@@ -256,14 +275,39 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-
-        if (mRequestingLocationUpdates && checkPermissions()) {
-            startLocationUpdates();
-        }
-
+        getAllDealers();
 
     }
+
+    private void getAllDealers() {
+        GetDealerByIdResponse requestModel = new GetDealerByIdResponse();
+        requestModel.setAgentId(agentId);
+        Utils.showProgressDialog(this);
+        RestClient.getAgentById(agentId, new Callback<List<GetDealerByIdResponse>>() {
+
+
+            @Override
+            public void onResponse(Call<List<GetDealerByIdResponse>> call, Response<List<GetDealerByIdResponse>> response) {
+                Utils.dismissProgressDialog();
+                if (response.body() != null) {
+                    if (response.body().size() > 0) {
+                        mAdapter.setdata(response.body());
+                        mAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed ", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GetDealerByIdResponse>> call, Throwable t) {
+                Utils.dismissProgressDialog();
+                Utils.displayToast(MainActivity.this, "Unable to add, please try again later");
+
+            }
+        });
+    }
+
 
     private boolean checkPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(this,
@@ -279,85 +323,51 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    public boolean validate() {
-        boolean check = true;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-        String fnamee = fname.getText().toString();
-        final String lnamee = lname.getText().toString();
-        final String emaill = email.getText().toString();
-        String messagee = message.getText().toString();
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-        if (mCurrentLocation != null) {
-            latitude = String.valueOf(mCurrentLocation.getLatitude());
-            longitude = String.valueOf(mCurrentLocation.getLongitude());
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        String msg = "";
+        switch (item.getItemId()) {
+            case R.id.add_contact:
+                // msg="Add data";
+                Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.mark_attendence:
+                startLocationButtonClick();
+                break;
         }
-        if (fnamee.isEmpty()) {
-            fname.setError("at least 3 characters");
-            check = false;
-        } else {
-            fname.setError(null);
-        }
-
-        if (lnamee.isEmpty()) {
-            lname.setError("Enter Valid lname");
-            check = false;
-        } else {
-            lname.setError(null);
-        }
+        Toast.makeText(this, "checked", Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
+    }
 
 
-        if (emaill.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emaill).matches()) {
-            email.setError("enter a valid email address");
-            check = false;
-        } else {
-            email.setError(null);
-        }
+    public void sendMessage(View view) {
 
-        if (messagee.isEmpty()) {
-            message.setError("Enter Valid Message");
-            check = false;
-        } else {
-            message.setError(null);
-        }
+        EditText editText = findViewById(R.id.title);
+        EditText editText1 = findViewById(R.id.genre);
+        EditText editText2 = findViewById(R.id.year);
+
+        String message = editText.getText().toString();
+        String message1 = editText1.getText().toString();
+        String message2 = editText2.getText().toString();
 
 
-        if (check) {
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        intent.putExtra("EXTRA_MESSAGE", message);
+        intent.putExtra("EXTRA_MESSAGE1", message1);
+        intent.putExtra("EXTRA_MESSAGE2", message2);
 
-            RegisterResponse registerResponse = new RegisterResponse();
 
-            RestClient.registerUser(registerResponse, new Callback<RegisterResponse>() {
-                @Override
-                public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                    if (response.isSuccessful()) {
-                        RegisterResponse responseModel = response.body();
+        startActivity(intent);
 
-                        Utils.dismissProgressDialog();
-                        if (response.code() == 200) {
-                            Toast.makeText(RegistrationActivity.this, "registration succesfully", Toast.LENGTH_LONG).show();
-                            Intent intent = null;
-                            if (responseModel.equals(emaill)) {
-                                intent = new Intent(RegistrationActivity.this, MainActivity.class);
-                            } else {
-                                intent = new Intent(RegistrationActivity.this, AccountNotActivatedActivity.class);
-                            }
-                            startActivity(intent);
-                            RegistrationActivity.this.finish();
-                            return;
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                    Utils.dismissProgressDialog();
-                    Log.d(LoginActivity.class.getSimpleName(), "registration failed");
-                }
-            });
-        }
     }
 
 }
-
-
-

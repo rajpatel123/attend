@@ -14,14 +14,14 @@ android {
         release {
             minifyEnabled false
             testCoverageEnabled = true
-            buildConfigField "String", "API_SERVER_IP", "\" https://www.thesalespower.com/\""
+            buildConfigField "String", "API_SERVER_IP", "\"https://www.thesalespower.com/\""
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         debug {
             minifyEnabled false
             testCoverageEnabled = true
-            buildConfigField "String", "API_SERVER_IP", "\" https://www.thesalespower.com/\""
+            buildConfigField "String", "API_SERVER_IP", "\"https://www.thesalespower.com/\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

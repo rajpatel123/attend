@@ -1,9 +1,11 @@
-package com.example.kishan.recyclerrrr;
+package com.example.kishan.recyclerrrr.activitiy;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.kishan.recyclerrrr.R;
 
 public class SplashActivity extends AppCompatActivity {
 

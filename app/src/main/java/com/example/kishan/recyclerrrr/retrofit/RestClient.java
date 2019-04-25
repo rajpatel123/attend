@@ -1,10 +1,14 @@
 package com.example.kishan.recyclerrrr.retrofit;
 
 
+import com.example.kishan.recyclerrrr.Models.addDealer.AddDealerRequest;
+import com.example.kishan.recyclerrrr.Models.addagentbyid.GetDealerByIdResponse;
 import com.example.kishan.recyclerrrr.Models.login.LoginResponse;
-import com.example.kishan.recyclerrrr.Models.registration.RegisterResponse;
+import com.example.kishan.recyclerrrr.Models.markAttendanceResponse.MarkAttendanceResponse;
+import com.example.kishan.recyclerrrr.Models.addDealer.AddDealerResponse;
 
-import okhttp3.RequestBody;
+import java.util.List;
+
 import retrofit2.Callback;
 
 public class RestClient {
@@ -16,11 +20,19 @@ public class RestClient {
     }
 
     //Registration
-    public static void registerUser(Integer agentId, String email, String firstName, String lastName, Number latitude, Number longitude, String message, Callback<RegisterResponse> callback) {
-        RetrofitClient.getClient().register(agentId, email, firstName, lastName, latitude, longitude, message).enqueue(callback);
+
+    public static void addNewDealer(AddDealerRequest addDealerRequest, Callback <AddDealerResponse> callback) {
+        RetrofitClient.getClient().addDealer(addDealerRequest).enqueue(callback);
     }
 
+    //getAgentById
+    public static void getAgentById(Integer agentId, Callback<List<GetDealerByIdResponse>> callback) {
+        RetrofitClient.getClient().getDealer(agentId).enqueue(callback);
+    }
 
+    //markAttendence
+    public static void markAttendenceSystem(Number companyId,Number agentId,String latitude,String longitude,Number punchValue, Callback<MarkAttendanceResponse> callback) {
+        RetrofitClient.getClient().markAttendence(companyId,agentId,latitude,longitude,punchValue).enqueue(callback);
+    }
 }
-
 

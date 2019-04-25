@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".activitiy.LoginActivity">
 
 
     <android.support.v7.widget.Toolbar
@@ -84,7 +84,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:hint="Id : "
-                android:text="kishan123@gmail.com"
+                android:text="Shashwat24156"
                 android:background="@null"
                 android:textSize="15dp" />
 
@@ -122,8 +122,8 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
-                android:hint="Company Name"
-                android:text="123456"
+                android:hint="password"
+                android:text="admin123"
                 android:background="@null"
                 android:textSize="15dp" />
 
@@ -160,13 +160,13 @@
 
 
             <EditText
-                android:id="@+id/pwd_TV1"
+                android:id="@+id/edit_companyName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
-                android:hint="Company Name"
-                android:text="JPR"
+                android:hint="company name"
+                android:text="salestrack"
                 android:background="@null"
                 android:textSize="15dp" />
         </LinearLayout>

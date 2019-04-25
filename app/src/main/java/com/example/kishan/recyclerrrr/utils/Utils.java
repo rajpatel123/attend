@@ -30,7 +30,7 @@ public class Utils {
 
     private static ProgressDialog pDialog;
 
-    public static void showProgressDialog(View.OnClickListener context) {
+    public static void showProgressDialog(Context context) {
         if (pDialog != null) {
             pDialog.dismiss();
         }

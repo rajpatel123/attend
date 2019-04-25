@@ -1,10 +1,8 @@
-package com.example.kishan.recyclerrrr.Models.registration;
-
-
+package com.example.kishan.recyclerrrr.Models.addDealer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RegisterResponse {
+public class AddDealerResponse {
 
 @SerializedName("result")
 @Expose

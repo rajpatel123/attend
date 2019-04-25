@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/report"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity">
+    tools:context=".activitiy.SplashActivity">
 
     <ImageView
         android:layout_marginTop="200dp"

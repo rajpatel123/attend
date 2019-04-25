@@ -3,7 +3,7 @@ package com.example.kishan.recyclerrrr.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class DnaPrefs {
+public class AttandancePrefs {
     private static final String KENT_SECURITY_PREFS = "HFCSecurity";
     private static SharedPreferences sharedPreferences;
 
