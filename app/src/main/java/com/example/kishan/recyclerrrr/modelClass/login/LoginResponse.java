@@ -1,4 +1,4 @@
-package com.example.kishan.recyclerrrr.Models.login;
+package com.example.kishan.recyclerrrr.modelClass.login;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

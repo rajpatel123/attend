@@ -8,26 +8,21 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.kishan.recyclerrrr.BuildConfig;
-import com.example.kishan.recyclerrrr.Models.addagentbyid.GetDealerByIdResponse;
-import com.example.kishan.recyclerrrr.adapter.MoviesAdapter;
+import com.example.kishan.recyclerrrr.modelClass.addDealer.AddDealerRequest;
+import com.example.kishan.recyclerrrr.modelClass.addDealer.AddDealerResponse;
 import com.example.kishan.recyclerrrr.R;
 import com.example.kishan.recyclerrrr.retrofit.RestClient;
 import com.example.kishan.recyclerrrr.utils.AttandancePrefs;
@@ -45,31 +40,23 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-    private List<GetDealerByIdResponse> dealerList = new ArrayList<GetDealerByIdResponse>();
-    private RecyclerView recyclerView;
-    private MoviesAdapter mAdapter;
-
-    private Toolbar toolbar;
+public class AddDealerActivity extends AppCompatActivity {
+    private EditText firstName, lastName, email, message;
+    private Button AddDealerButton;
+    Double latitude;
+    Double longitude;
+    int agentId;
 
     private String mLastUpdateTime;
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = ShowAllDealerActivity.class.getSimpleName();
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final int REQUEST_CHECK_SETTINGS = 100;
@@ -81,32 +68,59 @@ public class MainActivity extends AppCompatActivity {
     private LocationCallback mLocationCallback;
     private Location mCurrentLocation;
     private Boolean mRequestingLocationUpdates;
-    int agentId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registration);
         init();
+        startLocationUpdates();
 
-        agentId = AttandancePrefs.getInt(getApplicationContext(), "agentId", 0);
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(AddDealerActivity.this, ShowAllDealerActivity.class));
+                finish();
+            }
+        });
+
+
         restoreValuesFromBundle(savedInstanceState);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        firstName = findViewById(R.id.firstname_ET);
+        lastName = findViewById(R.id.lastname_ET);
+        email = findViewById(R.id.email_ET);
+        message = findViewById(R.id.message_ET);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        AddDealerButton = findViewById(R.id.reg_BTN);
+
+        AddDealerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validate();
+
+            }
+        });
 
 
-        mAdapter = new MoviesAdapter(MainActivity.this,dealerList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        Intent intent = getIntent();
+        String message = intent.getStringExtra("EXTRA_MESSAGE");
+        EditText editText = findViewById(R.id.email_ET);
+        editText.setText(message);
+
+
+        String message1 = intent.getStringExtra("EXTRA_MESSAGE1");
+        EditText editText1 = findViewById(R.id.firstname_ET);
+        editText1.setText(message1);
+
+
+        String message2 = intent.getStringExtra("EXTRA_MESSAGE2");
+        EditText editText2 = findViewById(R.id.lastname_ET);
+        editText2.setText(message2);
 
 
     }
-
 
     private void init() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -169,12 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         Log.i(TAG, "All location settings are satisfied.");
 
-                        if (mCurrentLocation != null) {
-                            Toast.makeText(getApplicationContext(), "Lat: " + mCurrentLocation.getLatitude()
-                                    + ", Lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Last known location is not available!", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(getApplicationContext(), "Started Location Update", Toast.LENGTH_SHORT).show();
 
                         //noinspection MissingPermission
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
@@ -194,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
 
                                     ResolvableApiException rae = (ResolvableApiException) e;
-                                    rae.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                                    rae.startResolutionForResult(AddDealerActivity.this, REQUEST_CHECK_SETTINGS);
                                 } catch (IntentSender.SendIntentException sie) {
                                     Log.i(TAG, "PendingIntent unable to execute request.");
                                 }
@@ -204,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                                         "fixed here. Fix in Settings.";
                                 Log.e(TAG, errorMessage);
 
-                                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                                Toast.makeText(AddDealerActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                         }
 
 
@@ -233,32 +242,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void startLocationButtonClick() {
-        // Requesting ACCESS_FINE_LOCATION using Dexter library
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-                        mRequestingLocationUpdates = true;
-                        startLocationUpdates();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        if (response.isPermanentlyDenied()) {
-                            // open device settings when the permission is
-                            // denied permanently
-                            openSettings();
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
-    }
 
     private void openSettings() {
         Intent intent = new Intent();
@@ -275,39 +258,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        getAllDealers();
+
+
+        if (mRequestingLocationUpdates && checkPermissions()) {
+            startLocationUpdates();
+        }
+
 
     }
-
-    private void getAllDealers() {
-        GetDealerByIdResponse requestModel = new GetDealerByIdResponse();
-        requestModel.setAgentId(agentId);
-        Utils.showProgressDialog(this);
-        RestClient.getAgentById(agentId, new Callback<List<GetDealerByIdResponse>>() {
-
-
-            @Override
-            public void onResponse(Call<List<GetDealerByIdResponse>> call, Response<List<GetDealerByIdResponse>> response) {
-                Utils.dismissProgressDialog();
-                if (response.body() != null) {
-                    if (response.body().size() > 0) {
-                        mAdapter.setdata(response.body());
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Failed ", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<GetDealerByIdResponse>> call, Throwable t) {
-                Utils.dismissProgressDialog();
-                Utils.displayToast(MainActivity.this, "Unable to add, please try again later");
-
-            }
-        });
-    }
-
 
     private boolean checkPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(this,
@@ -323,51 +281,88 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean validate() {
+        boolean check = true;
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+        String firstNameId = firstName.getText().toString();
+        String lastNameId = lastName.getText().toString();
+        String emailId = email.getText().toString();
+        String messageId = message.getText().toString();
+        agentId = AttandancePrefs.getInt(getApplicationContext(), "agentId", 0);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        String msg = "";
-        switch (item.getItemId()) {
-            case R.id.add_contact:
-                // msg="Add data";
-                Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.mark_attendence:
-                startLocationButtonClick();
-                break;
+        if (mCurrentLocation != null) {
+            latitude = Double.valueOf(Double.toString(mCurrentLocation.getLatitude()));
+            longitude = Double.valueOf(Double.toString(mCurrentLocation.getLongitude()));
         }
-        Toast.makeText(this, "checked", Toast.LENGTH_SHORT).show();
-        return super.onOptionsItemSelected(item);
+        if (firstNameId.isEmpty()) {
+            firstName.setError("at least 3 characters");
+            check = false;
+        } else {
+            firstName.setError(null);
+        }
+
+        if (lastNameId.isEmpty()) {
+            lastName.setError("Enter Valid lname");
+            check = false;
+        } else {
+            lastName.setError(null);
+        }
+
+
+        if (emailId.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailId).matches()) {
+            email.setError("enter a valid email address");
+            check = false;
+        } else {
+            email.setError(null);
+        }
+
+        if (messageId.isEmpty()) {
+            message.setError("Enter Valid Message");
+            check = false;
+        } else {
+            message.setError(null);
+        }
+
+
+        if (check) {
+
+            AddDealerRequest requestModel = new AddDealerRequest();
+            requestModel.setEmail(emailId);
+            requestModel.setAgentId(agentId);
+            requestModel.setFirstName(firstNameId);
+            requestModel.setLastName(lastNameId);
+            requestModel.setLatitude(latitude);
+            requestModel.setLongitude(longitude);
+            requestModel.setMessage(messageId);
+            Utils.showProgressDialog(this);
+
+            RestClient.addNewDealer(requestModel, new Callback<AddDealerResponse>() {
+                @Override
+                public void onResponse(Call<AddDealerResponse> call, Response<AddDealerResponse> response) {
+                    Utils.dismissProgressDialog();
+                    if (response.body() != null) {
+                        if (response.body().getResult().equalsIgnoreCase("success")) {
+                            Utils.displayToast(getApplicationContext(), "Successfuly ADD dealer");
+                            Intent intent = new Intent(AddDealerActivity.this, ShowAllDealerActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(AddDealerActivity.this, "Failed ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+
+
+                @Override
+                public void onFailure(Call<AddDealerResponse> call, Throwable t) {
+                    Utils.dismissProgressDialog();
+                    Utils.displayToast(AddDealerActivity.this, "Unable to register, please try again later");
+
+
+                }
+            });
+        }
+        return check;
     }
-
-
-    public void sendMessage(View view) {
-
-        EditText editText = findViewById(R.id.title);
-        EditText editText1 = findViewById(R.id.genre);
-        EditText editText2 = findViewById(R.id.year);
-
-        String message = editText.getText().toString();
-        String message1 = editText1.getText().toString();
-        String message2 = editText2.getText().toString();
-
-
-        Intent intent = new Intent(this, RegistrationActivity.class);
-        intent.putExtra("EXTRA_MESSAGE", message);
-        intent.putExtra("EXTRA_MESSAGE1", message1);
-        intent.putExtra("EXTRA_MESSAGE2", message2);
-
-
-        startActivity(intent);
-
-    }
-
 }
+

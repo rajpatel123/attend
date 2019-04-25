@@ -7,7 +7,7 @@
     android:background="@color/textcolor"
 
     android:orientation="vertical"
-    tools:context=".activitiy.MainActivity">
+    tools:context=".activitiy.ShowAllDealerActivity">
 
 
     <android.support.v7.widget.Toolbar

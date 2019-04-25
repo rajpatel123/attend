@@ -1,10 +1,8 @@
-package com.example.kishan.recyclerrrr.Models.markAttendanceResponse;
-
-
+package com.example.kishan.recyclerrrr.modelClass.addDealer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MarkAttendanceResponse {
+public class AddDealerResponse {
 
 @SerializedName("result")
 @Expose

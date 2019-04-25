@@ -1,4 +1,4 @@
-package com.example.kishan.recyclerrrr.Models.addagentbyid;
+package com.example.kishan.recyclerrrr.modelClass.addagentbyid;
 
 
 import com.google.gson.annotations.Expose;

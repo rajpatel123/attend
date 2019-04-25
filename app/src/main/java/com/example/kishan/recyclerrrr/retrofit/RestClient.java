@@ -1,11 +1,11 @@
 package com.example.kishan.recyclerrrr.retrofit;
 
 
-import com.example.kishan.recyclerrrr.Models.addDealer.AddDealerRequest;
-import com.example.kishan.recyclerrrr.Models.addagentbyid.GetDealerByIdResponse;
-import com.example.kishan.recyclerrrr.Models.login.LoginResponse;
-import com.example.kishan.recyclerrrr.Models.markAttendanceResponse.MarkAttendanceResponse;
-import com.example.kishan.recyclerrrr.Models.addDealer.AddDealerResponse;
+import com.example.kishan.recyclerrrr.modelClass.addDealer.AddDealerRequest;
+import com.example.kishan.recyclerrrr.modelClass.addagentbyid.GetDealerByIdResponse;
+import com.example.kishan.recyclerrrr.modelClass.login.LoginResponse;
+import com.example.kishan.recyclerrrr.modelClass.markAttendanceResponse.MarkAttendanceResponse;
+import com.example.kishan.recyclerrrr.modelClass.addDealer.AddDealerResponse;
 
 import java.util.List;
 

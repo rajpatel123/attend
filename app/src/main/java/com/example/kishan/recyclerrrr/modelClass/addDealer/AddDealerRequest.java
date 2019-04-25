@@ -1,4 +1,4 @@
-package com.example.kishan.recyclerrrr.Models.addDealer;
+package com.example.kishan.recyclerrrr.modelClass.addDealer;
 
 
 import com.google.gson.annotations.Expose;

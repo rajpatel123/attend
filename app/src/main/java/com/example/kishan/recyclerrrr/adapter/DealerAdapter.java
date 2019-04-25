@@ -7,19 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.kishan.recyclerrrr.Models.addagentbyid.GetDealerByIdResponse;
+import com.example.kishan.recyclerrrr.modelClass.addagentbyid.GetDealerByIdResponse;
 import com.example.kishan.recyclerrrr.R;
 
 import java.util.List;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
+public class DealerAdapter extends RecyclerView.Adapter<DealerAdapter.MyViewHolder> {
 
-    private List<GetDealerByIdResponse> dealrList;
+    private List<GetDealerByIdResponse> dealerList;
     Context context;
 
-    public MoviesAdapter(Context context, List<GetDealerByIdResponse> body) {
-        this.context=context;
-        this.dealrList = body;
+    public DealerAdapter(Context context, List<GetDealerByIdResponse> body) {
+        this.context = context;
+        this.dealerList = body;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -35,7 +35,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
 
     public void setdata(List<GetDealerByIdResponse> moviesList) {
-        this.dealrList = moviesList;
+        this.dealerList = moviesList;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        GetDealerByIdResponse movie = dealrList.get(position);
+        GetDealerByIdResponse movie = dealerList.get(position);
         holder.title.setText(movie.getFirstName());
         holder.genre.setText(movie.getLastName());
         holder.year.setText(movie.getPhone());
@@ -56,6 +56,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return dealrList.size();
+        return dealerList.size();
     }
 }

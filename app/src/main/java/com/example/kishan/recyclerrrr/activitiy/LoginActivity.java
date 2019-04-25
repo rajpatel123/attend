@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.kishan.recyclerrrr.Models.login.LoginResponse;
+import com.example.kishan.recyclerrrr.modelClass.login.LoginResponse;
 import com.example.kishan.recyclerrrr.R;
 import com.example.kishan.recyclerrrr.retrofit.RestClient;
 import com.example.kishan.recyclerrrr.utils.AttandancePrefs;
@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     if (Integer.parseInt(response.body().getUserId()) > 0) {
 
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, ShowAllDealerActivity.class);
                                         Utils.displayToast(getApplicationContext(), "login succesfull");
                                         AttandancePrefs.putInt(LoginActivity.this, "agentId", Integer.parseInt(response.body().getAgentId()));
                                         startActivity(intent);
