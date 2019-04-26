@@ -6,11 +6,14 @@
     android:orientation="vertical"
     android:background="@color/report"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
     tools:context=".activitiy.SplashActivity">
 
     <ImageView
-        android:layout_marginTop="200dp"
-        android:layout_gravity="center"
+
+      android:layout_gravity="center"
+
         android:id="@+id/locationnn"
         android:background="@drawable/reporter"
         android:layout_width="120dp"

@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,7 +65,7 @@ import retrofit2.Response;
 public class ShowAllDealerActivity extends AppCompatActivity {
     private List<GetDealerByIdResponse> dealerList = new ArrayList<GetDealerByIdResponse>();
     private RecyclerView recyclerView;
-    private DealerAdapter mAdapter;
+
 
     private Toolbar toolbar;
 
@@ -97,12 +98,6 @@ public class ShowAllDealerActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-
-        mAdapter = new DealerAdapter(ShowAllDealerActivity.this,dealerList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
 
 
     }
@@ -176,7 +171,7 @@ public class ShowAllDealerActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Last known location is not available!", Toast.LENGTH_SHORT).show();
                         }
 
-                        //noinspection MissingPermission
+
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
                                 mLocationCallback, Looper.myLooper());
 
@@ -234,7 +229,7 @@ public class ShowAllDealerActivity extends AppCompatActivity {
     }
 
     public void startLocationButtonClick() {
-        // Requesting ACCESS_FINE_LOCATION using Dexter library
+
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
@@ -283,29 +278,44 @@ public class ShowAllDealerActivity extends AppCompatActivity {
         GetDealerByIdResponse requestModel = new GetDealerByIdResponse();
         requestModel.setAgentId(agentId);
         Utils.showProgressDialog(this);
-        RestClient.getAgentById(agentId, new Callback<List<GetDealerByIdResponse>>() {
+        if (Utils.isInternetConnected(this)) {
+            Utils.showProgressDialog(this);
+            RestClient.getAgentById(agentId, new Callback<List<GetDealerByIdResponse>>() {
+                @Override
+                public void onResponse(Call<List<GetDealerByIdResponse>> call, Response<List<GetDealerByIdResponse>> response) {
+                    Utils.dismissProgressDialog();
+
+                  //  Toast.makeText(ShowAllDealerActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    if (response.body() != null) {
+                        Log.d("First", "Done1");
+                        dealerList = response.body();
+                        Log.d("First", "Done2");
+                        if (dealerList != null && dealerList.size() > 0) {
+                            Log.d("First", "Done3");
+                            DealerAdapter dealerAdapter=new DealerAdapter(getApplicationContext());
+                            dealerAdapter.setdata(dealerList);
+                            Log.d("First", "Done4");
+
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                            recyclerView.setLayoutManager(mLayoutManager);
+                            recyclerView.setItemAnimator(new DefaultItemAnimator());
+                            recyclerView.setAdapter(dealerAdapter);
 
 
-            @Override
-            public void onResponse(Call<List<GetDealerByIdResponse>> call, Response<List<GetDealerByIdResponse>> response) {
-                Utils.dismissProgressDialog();
-                if (response.body() != null) {
-                    if (response.body().size() > 0) {
-                        mAdapter.setdata(response.body());
-                        mAdapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(ShowAllDealerActivity.this, "Failed ", Toast.LENGTH_SHORT).show();
+                        }
+
+
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<GetDealerByIdResponse>> call, Throwable t) {
-                Utils.dismissProgressDialog();
-                Utils.displayToast(ShowAllDealerActivity.this, "Unable to add, please try again later");
+                @Override
+                public void onFailure(Call<List<GetDealerByIdResponse>> call, Throwable t) {
+                    Utils.dismissProgressDialog();
+                    Toast.makeText(ShowAllDealerActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-            }
-        });
     }
 
 

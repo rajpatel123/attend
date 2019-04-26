@@ -29,7 +29,7 @@ private String phone;
 private String message;
 @SerializedName("registerDate")
 @Expose
-private Integer registerDate;
+private String registerDate;
 @SerializedName("latitude")
 @Expose
 private String latitude;
@@ -102,11 +102,11 @@ public void setMessage(String message) {
 this.message = message;
 }
 
-public Integer getRegisterDate() {
+public String getRegisterDate() {
 return registerDate;
 }
 
-public void setRegisterDate(Integer registerDate) {
+public void setRegisterDate(String registerDate) {
 this.registerDate = registerDate;
 }
 

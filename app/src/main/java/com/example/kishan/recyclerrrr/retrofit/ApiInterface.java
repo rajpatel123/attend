@@ -30,7 +30,7 @@ public interface ApiInterface {
 
     //addAgent
     @GET("agent/getDealerByAgentId/{agentId}")
-    Call<List<GetDealerByIdResponse>> getDealer(@Path("agentId") Integer agentId);
+    Call<List<GetDealerByIdResponse>> getAgentById(@Path("agentId") Integer agentId);
 
     //markAttendance
 

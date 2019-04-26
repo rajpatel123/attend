@@ -27,11 +27,11 @@ public class RestClient {
 
     //getAgentById
     public static void getAgentById(Integer agentId, Callback<List<GetDealerByIdResponse>> callback) {
-        RetrofitClient.getClient().getDealer(agentId).enqueue(callback);
+        RetrofitClient.getClient().getAgentById(agentId).enqueue(callback);
     }
 
     //markAttendence
-    public static void markAttendenceSystem(Number companyId,Number agentId,String latitude,String longitude,Number punchValue, Callback<MarkAttendanceResponse> callback) {
+    public static void markDealerAttendence(Number companyId,Number agentId,String latitude,String longitude,Number punchValue, Callback<MarkAttendanceResponse> callback) {
         RetrofitClient.getClient().markAttendence(companyId,agentId,latitude,longitude,punchValue).enqueue(callback);
     }
 }

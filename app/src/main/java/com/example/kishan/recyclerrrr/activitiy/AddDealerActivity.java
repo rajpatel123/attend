@@ -183,9 +183,7 @@ public class AddDealerActivity extends AppCompatActivity {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         Log.i(TAG, "All location settings are satisfied.");
 
-                        Toast.makeText(getApplicationContext(), "Started Location Update", Toast.LENGTH_SHORT).show();
 
-                        //noinspection MissingPermission
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
                                 mLocationCallback, Looper.myLooper());
 

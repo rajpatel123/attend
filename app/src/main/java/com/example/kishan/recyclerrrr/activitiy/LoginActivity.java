@@ -46,11 +46,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (check) {
 
-
+                    Utils.showProgressDialog(LoginActivity.this);
                     RestClient.loginUser(companyId, emailId, passwordId, new Callback<LoginResponse>() {
                         @Override
                         public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                            Utils.dismissProgressDialog();
+
                             if (response.body() != null) {
                                 if (response.body().getLoginFlag().equals("2")) {
                                     Utils.displayToast(getApplicationContext(), "Password is invalid");
@@ -74,11 +74,13 @@ public class LoginActivity extends AppCompatActivity {
                                     Utils.displayToast(getApplicationContext(), "something went wrong");
 
                                 }
+
                                 if (response.body().getLoginFlag().equals("1")) {
 
                                     if (Integer.parseInt(response.body().getUserId()) > 0) {
 
                                         Intent intent = new Intent(LoginActivity.this, ShowAllDealerActivity.class);
+                                        Utils.dismissProgressDialog();
                                         Utils.displayToast(getApplicationContext(), "login succesfull");
                                         AttandancePrefs.putInt(LoginActivity.this, "agentId", Integer.parseInt(response.body().getAgentId()));
                                         startActivity(intent);

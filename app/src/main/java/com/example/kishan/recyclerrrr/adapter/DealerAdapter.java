@@ -16,11 +16,12 @@ public class DealerAdapter extends RecyclerView.Adapter<DealerAdapter.MyViewHold
 
     private List<GetDealerByIdResponse> dealerList;
     Context context;
-
-    public DealerAdapter(Context context, List<GetDealerByIdResponse> body) {
+    public DealerAdapter(Context context) {
         this.context = context;
-        this.dealerList = body;
     }
+
+
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, year, genre;
