@@ -49,7 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddDealerActivity extends AppCompatActivity {
-    private EditText firstName, lastName, email, message;
+    private EditText firstName, mobileNumber, email, message;
     private Button AddDealerButton;
     Double latitude;
     Double longitude;
@@ -88,7 +88,7 @@ public class AddDealerActivity extends AppCompatActivity {
         restoreValuesFromBundle(savedInstanceState);
 
         firstName = findViewById(R.id.firstname_ET);
-        lastName = findViewById(R.id.lastname_ET);
+        mobileNumber = findViewById(R.id.Mobile_ET);
         email = findViewById(R.id.email_ET);
         message = findViewById(R.id.message_ET);
 
@@ -116,7 +116,7 @@ public class AddDealerActivity extends AppCompatActivity {
 
 
         String message2 = intent.getStringExtra("EXTRA_MESSAGE2");
-        EditText editText2 = findViewById(R.id.lastname_ET);
+        EditText editText2 = findViewById(R.id.Mobile_ET);
         editText2.setText(message2);
 
 
@@ -283,7 +283,7 @@ public class AddDealerActivity extends AppCompatActivity {
         boolean check = true;
 
         String firstNameId = firstName.getText().toString();
-        String lastNameId = lastName.getText().toString();
+        String mobileNumberId = mobileNumber.getText().toString();
         String emailId = email.getText().toString();
         String messageId = message.getText().toString();
         agentId = AttandancePrefs.getInt(getApplicationContext(), "agentId", 0);
@@ -299,11 +299,11 @@ public class AddDealerActivity extends AppCompatActivity {
             firstName.setError(null);
         }
 
-        if (lastNameId.isEmpty()) {
-            lastName.setError("Enter Valid lname");
+        if (mobileNumberId.isEmpty()) {
+            mobileNumber.setError("Enter Valid lname");
             check = false;
         } else {
-            lastName.setError(null);
+            mobileNumber.setError(null);
         }
 
 
@@ -328,7 +328,7 @@ public class AddDealerActivity extends AppCompatActivity {
             requestModel.setEmail(emailId);
             requestModel.setAgentId(agentId);
             requestModel.setFirstName(firstNameId);
-            requestModel.setLastName(lastNameId);
+            requestModel.setLastName(mobileNumberId);
             requestModel.setLatitude(latitude);
             requestModel.setLongitude(longitude);
             requestModel.setMessage(messageId);

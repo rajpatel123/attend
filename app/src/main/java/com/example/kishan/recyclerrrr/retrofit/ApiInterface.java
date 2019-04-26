@@ -33,7 +33,6 @@ public interface ApiInterface {
     Call<List<GetDealerByIdResponse>> getAgentById(@Path("agentId") Integer agentId);
 
     //markAttendance
-
     @GET("agent/punch/{companyId}/{agentId}/{latitude}/{longitude}/{punchValue}")
     Call<MarkAttendanceResponse> markAttendence(@Path("companyId") Number companyId,
                                                 @Path("agentId") Number agentId,

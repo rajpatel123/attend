@@ -362,17 +362,17 @@ public class ShowAllDealerActivity extends AppCompatActivity {
 
         EditText email = findViewById(R.id.ET_EMAIL);
         EditText firstName = findViewById(R.id.Et_NAME);
-        EditText lastName = findViewById(R.id.ET_LTNAME);
+        EditText mobile = findViewById(R.id.ET_MOBILE);
 
         String emailDealer = email.getText().toString();
         String firstNameDealer = firstName.getText().toString();
-        String lastNameDealer = lastName.getText().toString();
+        String mobileDealer = mobile.getText().toString();
 
 
         Intent intent = new Intent(this, AddDealerActivity.class);
         intent.putExtra("EXTRA_MESSAGE", emailDealer);
         intent.putExtra("EXTRA_MESSAGE1", firstNameDealer);
-        intent.putExtra("EXTRA_MESSAGE2", lastNameDealer);
+        intent.putExtra("EXTRA_MESSAGE2", mobileDealer);
 
 
         startActivity(intent);

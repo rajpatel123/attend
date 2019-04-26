@@ -104,7 +104,7 @@
                         android:layout_marginRight="20dp"
                         android:background="@null"
                         android:textSize="16dp"
-                        android:hint= "firstname" />
+                        android:hint= "Firstname" />
 
 
                     <View
@@ -115,7 +115,7 @@
                         android:background="@color/view_color" />
 
                     <EditText
-                        android:id="@+id/lastname_ET"
+                        android:id="@+id/Mobile_ET"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
@@ -123,7 +123,7 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:textSize="16dp"
-                        android:hint="lastname" />
+                        android:hint="Mobile" />
 
                     <View
                         android:layout_width="match_parent"

@@ -109,15 +109,15 @@ public class LoginActivity extends AppCompatActivity {
                 boolean check = true;
 
                 if (emailId.length() < 4) {
-                    email.setError("Field is empty");
+                    email.setError("enter more than 4 charater ");
                     check = false;
                 }
                 if (passwordId.length() < 4) {
-                    password.setError("enter more than 6 charater");
+                    password.setError("enter more than 4 charater");
                     check = false;
                 }
                 if (companyId.length() < 4) {
-                    password.setError("enter more than 6 charater");
+                    password.setError("enter more than 4 charater");
                     check = false;
                 }
                 return check;

@@ -20,7 +20,6 @@ public class RestClient {
     }
 
     //Registration
-
     public static void addNewDealer(AddDealerRequest addDealerRequest, Callback <AddDealerResponse> callback) {
         RetrofitClient.getClient().addDealer(addDealerRequest).enqueue(callback);
     }

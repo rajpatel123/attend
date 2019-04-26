@@ -30,7 +30,7 @@ public class DealerAdapter extends RecyclerView.Adapter<DealerAdapter.MyViewHold
             super(view);
             email = (TextView) view.findViewById(R.id.ET_EMAIL);
             firstName = (TextView) view.findViewById(R.id.Et_NAME);
-            lastName = (TextView) view.findViewById(R.id.ET_LTNAME);
+            lastName = (TextView) view.findViewById(R.id.ET_MOBILE);
         }
     }
 
