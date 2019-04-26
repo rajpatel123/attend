@@ -24,13 +24,13 @@ public class DealerAdapter extends RecyclerView.Adapter<DealerAdapter.MyViewHold
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, year, genre;
+        public TextView firstName, email, lastName;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            genre = (TextView) view.findViewById(R.id.genre);
-            year = (TextView) view.findViewById(R.id.year);
+            email = (TextView) view.findViewById(R.id.ET_EMAIL);
+            firstName = (TextView) view.findViewById(R.id.Et_NAME);
+            lastName = (TextView) view.findViewById(R.id.ET_LTNAME);
         }
     }
 
@@ -49,10 +49,10 @@ public class DealerAdapter extends RecyclerView.Adapter<DealerAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        GetDealerByIdResponse movie = dealerList.get(position);
-        holder.title.setText(movie.getFirstName());
-        holder.genre.setText(movie.getLastName());
-        holder.year.setText(movie.getPhone());
+        GetDealerByIdResponse getDealerByIdResponse = dealerList.get(position);
+        holder.email.setText(getDealerByIdResponse.getEmail());
+        holder.firstName.setText(getDealerByIdResponse.getFirstName());
+        holder.lastName.setText(getDealerByIdResponse.getLastName());
     }
 
     @Override

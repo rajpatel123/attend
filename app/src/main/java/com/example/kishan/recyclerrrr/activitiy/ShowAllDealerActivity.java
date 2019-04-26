@@ -99,7 +99,6 @@ public class ShowAllDealerActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
 
-
     }
 
 
@@ -285,14 +284,14 @@ public class ShowAllDealerActivity extends AppCompatActivity {
                 public void onResponse(Call<List<GetDealerByIdResponse>> call, Response<List<GetDealerByIdResponse>> response) {
                     Utils.dismissProgressDialog();
 
-                  //  Toast.makeText(ShowAllDealerActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(ShowAllDealerActivity.this, "Success", Toast.LENGTH_SHORT).show();
                     if (response.body() != null) {
                         Log.d("First", "Done1");
                         dealerList = response.body();
                         Log.d("First", "Done2");
                         if (dealerList != null && dealerList.size() > 0) {
                             Log.d("First", "Done3");
-                            DealerAdapter dealerAdapter=new DealerAdapter(getApplicationContext());
+                            DealerAdapter dealerAdapter = new DealerAdapter(getApplicationContext());
                             dealerAdapter.setdata(dealerList);
                             Log.d("First", "Done4");
 
@@ -361,19 +360,19 @@ public class ShowAllDealerActivity extends AppCompatActivity {
 
     public void sendMessage(View view) {
 
-        EditText editText = findViewById(R.id.title);
-        EditText editText1 = findViewById(R.id.genre);
-        EditText editText2 = findViewById(R.id.year);
+        EditText email = findViewById(R.id.ET_EMAIL);
+        EditText firstName = findViewById(R.id.Et_NAME);
+        EditText lastName = findViewById(R.id.ET_LTNAME);
 
-        String message = editText.getText().toString();
-        String message1 = editText1.getText().toString();
-        String message2 = editText2.getText().toString();
+        String emailDealer = email.getText().toString();
+        String firstNameDealer = firstName.getText().toString();
+        String lastNameDealer = lastName.getText().toString();
 
 
         Intent intent = new Intent(this, AddDealerActivity.class);
-        intent.putExtra("EXTRA_MESSAGE", message);
-        intent.putExtra("EXTRA_MESSAGE1", message1);
-        intent.putExtra("EXTRA_MESSAGE2", message2);
+        intent.putExtra("EXTRA_MESSAGE", emailDealer);
+        intent.putExtra("EXTRA_MESSAGE1", firstNameDealer);
+        intent.putExtra("EXTRA_MESSAGE2", lastNameDealer);
 
 
         startActivity(intent);
