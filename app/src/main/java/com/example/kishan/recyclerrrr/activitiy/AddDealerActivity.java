@@ -105,19 +105,22 @@ public class AddDealerActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra("EXTRA_MESSAGE");
-        EditText editText = findViewById(R.id.email_ET);
-        editText.setText(message);
+        if (intent.hasExtra("name")){
+            String emailText = intent.getStringExtra("email");
+            email.setText(emailText);
 
 
-        String message1 = intent.getStringExtra("EXTRA_MESSAGE1");
-        EditText editText1 = findViewById(R.id.firstname_ET);
-        editText1.setText(message1);
+            String firstname = intent.getStringExtra("name");
+            firstName.setText(firstname);
+
+            String phone = intent.getStringExtra("mobile");
+            mobileNumber.setText(phone);
 
 
-        String message2 = intent.getStringExtra("EXTRA_MESSAGE2");
-        EditText editText2 = findViewById(R.id.Mobile_ET);
-        editText2.setText(message2);
+            String messagetxt = intent.getStringExtra("message");
+            message.setText(messagetxt);
+            AddDealerButton.setText("Update");
+        }
 
 
     }
@@ -340,7 +343,7 @@ public class AddDealerActivity extends AppCompatActivity {
                     Utils.dismissProgressDialog();
                     if (response.body() != null) {
                         if (response.body().getResult().equalsIgnoreCase("success")) {
-                            Utils.displayToast(getApplicationContext(), "Successfuly ADD dealer");
+                            Utils.displayToast(getApplicationContext(), "Dealer added Successfully ");
                             Intent intent = new Intent(AddDealerActivity.this, ShowAllDealerActivity.class);
                             startActivity(intent);
                         } else {
@@ -354,7 +357,7 @@ public class AddDealerActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<AddDealerResponse> call, Throwable t) {
                     Utils.dismissProgressDialog();
-                    Utils.displayToast(AddDealerActivity.this, "Unable to register, please try again later");
+                    Utils.displayToast(AddDealerActivity.this, "Unable to add, please try again later");
 
 
                 }

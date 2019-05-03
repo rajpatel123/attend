@@ -1,9 +1,12 @@
 package com.example.kishan.recyclerrrr.modelClass.login;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse {
+public class LoginResponse implements Parcelable {
 
     @SerializedName("userId")
     @Expose
@@ -68,6 +71,38 @@ public class LoginResponse {
     @SerializedName("punchStatus")
     @Expose
     private String punchStatus;
+
+    protected LoginResponse(Parcel in) {
+        userId = in.readString();
+        companyId = in.readString();
+        companyLoginName = in.readString();
+        companyName = in.readString();
+        userFirstName = in.readString();
+        userLastName = in.readString();
+        userRole = in.readString();
+        userType = in.readString();
+        profilePic = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        address = in.readString();
+        isActive = in.readString();
+        deactivationDate = in.readString();
+        loginFlag = in.readString();
+        agentId = in.readString();
+        punchStatus = in.readString();
+    }
+
+    public static final Creator<LoginResponse> CREATOR = new Creator<LoginResponse>() {
+        @Override
+        public LoginResponse createFromParcel(Parcel in) {
+            return new LoginResponse(in);
+        }
+
+        @Override
+        public LoginResponse[] newArray(int size) {
+            return new LoginResponse[size];
+        }
+    };
 
     public String getUserId() {
         return userId;
@@ -237,4 +272,29 @@ public class LoginResponse {
         this.punchStatus = punchStatus;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeString(companyId);
+        dest.writeString(companyLoginName);
+        dest.writeString(companyName);
+        dest.writeString(userFirstName);
+        dest.writeString(userLastName);
+        dest.writeString(userRole);
+        dest.writeString(userType);
+        dest.writeString(profilePic);
+        dest.writeString(email);
+        dest.writeString(phone);
+        dest.writeString(address);
+        dest.writeString(isActive);
+        dest.writeString(deactivationDate);
+        dest.writeString(loginFlag);
+        dest.writeString(agentId);
+        dest.writeString(punchStatus);
+    }
 }

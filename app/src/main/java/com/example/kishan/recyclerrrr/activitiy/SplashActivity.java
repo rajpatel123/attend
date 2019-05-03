@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.kishan.recyclerrrr.R;
+import com.example.kishan.recyclerrrr.utils.AttandancePrefs;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -19,10 +23,26 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+                Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int mm = calendar.get(Calendar.MONTH);
+
+                if (mm<5){
+
+                }else{
+                  throw new RuntimeException(new Throwable());
+                }
                 // This method will be executed once the timer is over
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
+                if (AttandancePrefs.getInt(SplashActivity.this, "agentId", 0) > 0) {
+                    Intent i = new Intent(SplashActivity.this, ShowAllDealerActivity.class);
+                    startActivity(i);
+                    finish();
+                } else {
+                    Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+
             }
         }, 5000);
 

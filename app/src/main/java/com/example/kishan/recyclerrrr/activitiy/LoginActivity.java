@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Utils.dismissProgressDialog();
                                         Utils.displayToast(getApplicationContext(), "login succesfull");
                                         AttandancePrefs.putInt(LoginActivity.this, "agentId", Integer.parseInt(response.body().getAgentId()));
+                                        AttandancePrefs.putString(LoginActivity.this, "companyId", response.body().getCompanyId());
                                         startActivity(intent);
                                     } else {
                                         Toast.makeText(LoginActivity.this, "Failed ", Toast.LENGTH_SHORT).show();

@@ -29,6 +29,7 @@ import com.example.kishan.recyclerrrr.BuildConfig;
 import com.example.kishan.recyclerrrr.modelClass.addagentbyid.GetDealerByIdResponse;
 import com.example.kishan.recyclerrrr.adapter.DealerAdapter;
 import com.example.kishan.recyclerrrr.R;
+import com.example.kishan.recyclerrrr.modelClass.markAttendanceResponse.MarkAttendanceResponse;
 import com.example.kishan.recyclerrrr.retrofit.RestClient;
 import com.example.kishan.recyclerrrr.utils.AttandancePrefs;
 import com.example.kishan.recyclerrrr.utils.Utils;
@@ -83,6 +84,8 @@ public class ShowAllDealerActivity extends AppCompatActivity {
     private Location mCurrentLocation;
     private Boolean mRequestingLocationUpdates;
     int agentId;
+    private String companyId;
+    private int punchValue = 0;
 
 
     @Override
@@ -92,8 +95,9 @@ public class ShowAllDealerActivity extends AppCompatActivity {
         init();
 
         agentId = AttandancePrefs.getInt(getApplicationContext(), "agentId", 0);
+        companyId = AttandancePrefs.getString(getApplicationContext(), "companyId");
         restoreValuesFromBundle(savedInstanceState);
-
+        punchValue = AttandancePrefs.getInt(this, "punchValue", 1);
         toolbar = (Toolbar) findViewById(R.id.toolbar1);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -111,6 +115,7 @@ public class ShowAllDealerActivity extends AppCompatActivity {
                 super.onLocationResult(locationResult);
                 mCurrentLocation = locationResult.getLastLocation();
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+                //markAttendance();
 
             }
         };
@@ -155,6 +160,9 @@ public class ShowAllDealerActivity extends AppCompatActivity {
 
 
     private void startLocationUpdates() {
+        if (mCurrentLocation != null) {
+            markAttendance();
+        }
         mSettingsClient
                 .checkLocationSettings(mLocationSettingsRequest)
                 .addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
@@ -162,13 +170,6 @@ public class ShowAllDealerActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         Log.i(TAG, "All location settings are satisfied.");
-
-                        if (mCurrentLocation != null) {
-                            Toast.makeText(getApplicationContext(), "Lat: " + mCurrentLocation.getLatitude()
-                                    + ", Lng: " + mCurrentLocation.getLongitude(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Last known location is not available!", Toast.LENGTH_SHORT).show();
-                        }
 
 
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
@@ -336,6 +337,12 @@ public class ShowAllDealerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem myActionMenuItem = menu.findItem(R.id.mark_attendence);
+        if (punchValue == 1) {
+            myActionMenuItem.setTitle("Punch In");
+        } else {
+            myActionMenuItem.setTitle("Punch Out");
+        }
         return true;
     }
 
@@ -352,31 +359,42 @@ public class ShowAllDealerActivity extends AppCompatActivity {
             case R.id.mark_attendence:
                 startLocationButtonClick();
                 break;
+
+                case R.id.logout:
+                    Intent logout = new Intent(ShowAllDealerActivity.this, LoginActivity.class);
+                    logout.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(logout);
+                    finish();
+                break;
         }
-        Toast.makeText(this, "checked", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }
 
+    private void markAttendance() {
+        Utils.showProgressDialog(this);
+        RestClient.markDealerAttendence(companyId, agentId, mCurrentLocation.getLatitude(), mCurrentLocation.getLatitude(), punchValue, new Callback<MarkAttendanceResponse>() {
+            @Override
+            public void onResponse(Call<MarkAttendanceResponse> call, Response<MarkAttendanceResponse> response) {
+                Utils.dismissProgressDialog();
+                if (response != null && response.body() != null) {
+                    if (response.body().getResult().equalsIgnoreCase("success")) {
+                        if (punchValue==1){
+                            punchValue=2;
+                        }else{
+                            punchValue=1;
+                        }
+                        invalidateOptionsMenu();
+                        Toast.makeText(ShowAllDealerActivity.this, "Your attendance updated successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
 
-    public void sendMessage(View view) {
-
-        EditText email = findViewById(R.id.ET_EMAIL);
-        EditText firstName = findViewById(R.id.Et_NAME);
-        EditText mobile = findViewById(R.id.ET_MOBILE);
-
-        String emailDealer = email.getText().toString();
-        String firstNameDealer = firstName.getText().toString();
-        String mobileDealer = mobile.getText().toString();
-
-
-        Intent intent = new Intent(this, AddDealerActivity.class);
-        intent.putExtra("EXTRA_MESSAGE", emailDealer);
-        intent.putExtra("EXTRA_MESSAGE1", firstNameDealer);
-        intent.putExtra("EXTRA_MESSAGE2", mobileDealer);
-
-
-        startActivity(intent);
-
+            @Override
+            public void onFailure(Call<MarkAttendanceResponse> call, Throwable t) {
+                Utils.dismissProgressDialog();
+            }
+        });
     }
+
 
 }

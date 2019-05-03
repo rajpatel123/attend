@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activitiy.LoginActivity"
-                  android:theme="@style/AppTheme1"></activity>
+                  android:theme="@style/AppTheme1"/>
         <activity android:name=".activitiy.ShowAllDealerActivity" />
         <activity android:name=".activitiy.AddDealerActivity"
             android:theme="@style/AppTheme1">
@@ -23,13 +23,12 @@
         </activity>
         <activity
             android:name=".activitiy.SplashActivity"
-
             android:theme="@style/AppTheme1">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>/>
+            </intent-filter>
 
         </activity>
     </application>

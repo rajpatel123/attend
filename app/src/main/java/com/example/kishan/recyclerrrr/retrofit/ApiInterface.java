@@ -34,10 +34,10 @@ public interface ApiInterface {
 
     //markAttendance
     @GET("agent/punch/{companyId}/{agentId}/{latitude}/{longitude}/{punchValue}")
-    Call<MarkAttendanceResponse> markAttendence(@Path("companyId") Number companyId,
+    Call<MarkAttendanceResponse> markAttendence(@Path("companyId") String companyId,
                                                 @Path("agentId") Number agentId,
-                                                @Path("latitude") String latitude,
-                                                @Path("longitude") String longitude,
+                                                @Path("latitude") double latitude,
+                                                @Path("longitude") double longitude,
                                                 @Path("punchValue") Number userId );
 
 

@@ -30,7 +30,7 @@ public class RestClient {
     }
 
     //markAttendence
-    public static void markDealerAttendence(Number companyId,Number agentId,String latitude,String longitude,Number punchValue, Callback<MarkAttendanceResponse> callback) {
+    public static void markDealerAttendence(String companyId,Number agentId,double latitude,double longitude,Number punchValue, Callback<MarkAttendanceResponse> callback) {
         RetrofitClient.getClient().markAttendence(companyId,agentId,latitude,longitude,punchValue).enqueue(callback);
     }
 }
